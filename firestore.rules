@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    // Leads Collection
+    match /leads/{leadId} {
+      allow read, update, delete: if isOwner(resource.data.userId);
+      allow create: if request.auth != null; // Relaxed for debugging: allow any auth user to create
+    }
+    // Activity Logs Collection
+    match /activity_logs/{logId} {
+      allow read: if isOwner(resource.data.userId);
+      // Allow creation if the user marks it as their own action
+      allow create: if isOwner(request.resource.data.userId);
+    }
+    // Users Collection (Profile)
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+  }
+}

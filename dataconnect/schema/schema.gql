@@ -1,0 +1,50 @@
+type Customer @table {
+  name: String!
+  industry: String
+  website: String
+  phone: String
+  address: String
+  description: String
+  createdAt: Timestamp!
+}
+
+type Contact @table {
+  customer: Customer!
+  firstName: String!
+  lastName: String!
+  email: String!
+  title: String
+  phone: String
+  createdAt: Timestamp!
+}
+
+type Interaction @table {
+  customer: Customer
+  contact: Contact
+  type: String!
+  date: Date!
+  description: String!
+  createdAt: Timestamp!
+}
+
+type Opportunity @table {
+  customer: Customer!
+  contact: Contact
+  name: String!
+  status: String!
+  value: Float!
+  expectedCloseDate: Date
+  notes: String
+  createdAt: Timestamp!
+}
+
+type Task @table {
+  customer: Customer
+  contact: Contact
+  opportunity: Opportunity
+  description: String!
+  dueDate: Date!
+  status: String!
+  assignedTo: UUID
+  createdAt: Timestamp!
+}
